@@ -52,10 +52,10 @@ class ArmoireController: # toutes les interactions avec l'armoire
         print("Nouvelle instance d’armoire connectée créée.")
         return cls()
 
-armoire = ArmoireController.new_armoire_instance()
 
 
 class Menus:
+    armoire = ArmoireController.new_armoire_instance()
     def menu_principal():
         print("Test des fonctions")
         choix = questionary.select(
