@@ -18,29 +18,32 @@ class ArmoireController: # toutes les interactions avec l'armoire
     
     def open_door(self):
         self.door_state = True
-        print(f"Porte {b.RED}OUVERTE")
-        print(f"état var: {self.door_state}")
+        print(f"Porte {f.YELLOW}ouverte")
         
     def close_door(self):
         self.door_state = False
-        print(f"{b.GREEN}Porte {f.YELLOW}FERMEE")
-        print(f"état var: {self.door_state}")
-
+        print(f"Porte {f.YELLOW}fermée")
 
 
     def lights_on(self):
         
         self.lights = True
-        print(f.YELLOW + "Lumières allumées.")
+        print(f"Lumières {f.YELLOW}allumées.")
         self.time_lights_on = time.time()
 
     def lights_off(self):
         self.lights = False
-        print(f.BLUE+"-> Lumières éteintes.")
+        print(f"\nLumières {f.BLUE}éteintes.")
         
-    def show_meteo(self, ccity):
-        self.city_meteo_raw = wc.get_weather(weather_cache, ccity)
-        print(self.city_meteo_raw)
+    def show_meteo(ccity):
+        city_meteo_raw = wc.get_weather(weather_cache, ccity)
+        temp = city_meteo_raw['main']['temp']
+        print(f"Température actuelle à {ccity}: {b.RED}{str(temp)}°C")
+
+    def start_ui(self):
+        self.ui_state = True
+        print(f.CYAN+ "Ecran allumé et initialisé")
+        Menus.menu_ui("Maxime")
         
         
 
@@ -54,7 +57,7 @@ armoire = ArmoireController.new_armoire_instance()
 
 class Menus:
     def menu_principal():
-        print(b.RED+s.BRIGHT+"ACTIONS TEST - INTERNAL ONLY")
+        print("Test des fonctions")
         choix = questionary.select(
             "choisir:",
             choices=[
@@ -80,4 +83,7 @@ class Menus:
             armoire.show_meteo(ch_city)
         elif choix == "eteindre lumiere":
             armoire.lights_off()
-            
+
+    def menu_ui(user):
+        print("\n"+b.LIGHTRED_EX+ "Bienvenue "+user)
+        ArmoireController.show_meteo("Vincennes")

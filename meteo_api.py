@@ -1,36 +1,5 @@
-from flask import Flask, request, jsonify
 import requests, json, time, os
 
-app = Flask(__name__)
-
-# Vêtements disponibles dans la penderie
-wardrobe = {
-    "froid": {
-        "min_temp": -10,
-        "max_temp": 10,
-        "conditions": ["clear", "clouds"]
-    },
-    "tiède": {
-        "min_temp": 10,
-        "max_temp": 20,
-        "conditions": ["clear", "clouds"]
-    },
-    "chaud": {
-        "min_temp": 20,
-        "max_temp": 40,
-        "conditions": ["clear", "clouds"]
-    },
-    "pluie": {
-        "min_temp": 0,
-        "max_temp": 40,
-        "conditions": ["rain", "drizzle"]
-    },
-    "neige": {
-        "min_temp": -10,
-        "max_temp": 10,
-        "conditions": ["clear", "snow"]
-    },
-}
 
 
 # Classe pour gérer la mise en cache
@@ -87,31 +56,3 @@ def recommend_clothes(temp, condition):
                 'conditions']:
             results.append(item)
     return results
-
-
-# Route principale de l’API
-@app.route('/getWeather')
-def weather_route():
-    city = request.args.get('city')
-    if not city:
-        return jsonify({'error': 'City required'}), 400
-
-    data = weather_cache.get_weather(city)
-    if data:
-        temp = data['main']['temp']
-        condition = data['weather'][0]['main'].lower()
-
-        recommended = recommend_clothes(temp, condition)
-
-        return jsonify({
-            'city': data['name'],
-            'temp': temp,
-            'description': data['weather'][0]['description'],
-            'recommended_clothes': recommended
-        })
-    else:
-        return jsonify({'error': 'impossible de fetch'}), 500
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
